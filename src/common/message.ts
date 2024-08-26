@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 // 读取pushkey文件
-const pushkeyTxt = fs.readFileSync("/app/config/pushkey.txt");
+const pushkeyTxt = fs.readFileSync("./config/pushkey.txt");
 const sendKey = process.env["SERVERPUSHKEY"] || pushkeyTxt.toString() || "";
 
 async function sendMessage() {

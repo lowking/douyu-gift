@@ -1,6 +1,6 @@
-import axios, { AxiosInstance } from "axios";
-import logger from "./logger";
-import fs from "fs";
+import axios, {AxiosInstance} from "axios"
+import logger from "./logger"
+import fs from "fs"
 
 class Request {
   // cookie
@@ -10,10 +10,9 @@ class Request {
 
   constructor() {
     // 读取cookie文件
-    const cookieTxt = fs.readFileSync("/app/config/cookie.txt");
+    const cookieTxt = fs.readFileSync("./config/cookie.txt");
     // 从环境变量获取cookie
-    const cookie = process.env["COOKIES"] || cookieTxt.toString() || "";
-    this.cookie = cookie;
+    this.cookie = process.env["COOKIES"] || cookieTxt.toString().trim() || "";
     // 创建axios对象
     this.req = axios.create({
       baseURL: "https://www.douyu.com",

@@ -125,18 +125,34 @@ class Douyu {
    * 访问直播间获取荧光棒
    */
   async claimGifts() {
-    const browser = await puppeteer.launch({ headless: "new", args: ["--no-sandbox"] });
+    // 初始化浏览器
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--window-size=1920,1080", "--ignore-certificate-errors", "--ignore-certificate-errors-spki-list", "--disable-dev-shm-usage"]
+    });
     const page = await browser.newPage();
+    // await page.setViewport({ width: 1920, height: 1080 });
+    // 访问直播间
+    await page.goto("https://www.douyu.com/1");
+    // 设置cookie
     const cookie = this.getCookieJSON(request.cookie);
     await page.setCookie(...cookie);
-    await page.goto("https://www.douyu.com/3800");
-    await page.waitForTimeout(5000);
+    // 刷新页面登录
     logger.info("刷新页面以完成登录");
     await page.reload();
+    // 等待页面加载完成
     await page.waitForSelector(".UserInfo");
-    logger.info("再次刷新页面");
-    await page.reload();
-    await page.waitForSelector(".UserInfo");
+    await sleep(5000);
+    // 判断是否登录
+    const isLogin = (await page.$(".UserInfo")) !== null;
+    if (isLogin) {
+      logger.info("成功以登陆状态进入页面");
+    } else {
+      logger.info("没有携带cookie进入页面,请重新检查cookie");
+    }
+    // logger.info("再次刷新页面");
+    // await page.reload();
+    // await page.waitForSelector(".UserInfo");
     logger.info("关闭直播间");
     await browser.close();
   }
@@ -157,6 +173,10 @@ class Douyu {
     }
     return result;
   }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default Douyu;

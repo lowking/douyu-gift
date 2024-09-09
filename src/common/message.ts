@@ -6,7 +6,7 @@ import path from "path";
 // 读取pushkey文件
 let pushkeyTxt = "";
 if (fs.existsSync("./config/pushkey.txt")) {
-  pushkeyTxt = fs.readFileSync("/app/config/pushkey.txt").toString();
+  pushkeyTxt = fs.readFileSync("./config/pushkey.txt").toString();
 }
 const sendKey = process.env["SERVERPUSHKEY"] || pushkeyTxt.trim() || "";
 
@@ -16,7 +16,7 @@ async function sendMessage() {
     text: "斗鱼荧光棒-完成",
     desp: fs.readFileSync(path.join(__dirname, "..", "..", "douyu.log"), "utf-8")
   };
-  if (data.desp && data.desp.indexOf("[ERROR]") != -1) {
+  if (data.desp && data.desp.indexOf("[ERROR]") == -1) {
     logger.info("------执行推送------");
     await axios({
       method: "post",
@@ -28,7 +28,7 @@ async function sendMessage() {
     });
     logger.info("------推送成功------");
   } else {
-    let errors = []
+    let errors: string[] = []
     data.desp.split(/\r?\n/).forEach(line =>  {
       if (line.indexOf("[ERROR]") != -1) errors.push(line)
     });

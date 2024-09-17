@@ -16,6 +16,9 @@ import logger from "./common/logger";
     } else {
       logger.info("当前选择模式为:平均分配模式");
       const roomList = await douyu.getRoomList();
+      if (!roomList) {
+        logger.error("未获取到直播间列表,请重新执行脚本")
+      }
       // 每个房间送多少个
       const everyGive = Math.ceil(douyu.own / roomList.length);
       // 剩下多少个

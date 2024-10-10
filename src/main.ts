@@ -25,6 +25,7 @@ import logger from "./common/logger";
       const left = Number(douyu.own) - Number(everyGive) * (roomList.length - 1);
       logger.info("------开始捐赠荧光棒------");
       for (const room of roomList) {
+        logger.info(`给${room}赠送`);
         if (room === roomList.at(-1)) {
           await douyu.donate(left, Number(room));
         } else {

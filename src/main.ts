@@ -24,13 +24,18 @@ import logger from "./common/logger";
       // 剩下多少个
       const left = Number(douyu.own) - Number(everyGive) * (roomList.length - 1);
       logger.info("------开始捐赠荧光棒------");
+      let isSent = false
       for (const room of roomList) {
         logger.info(`给${room}赠送`);
+        isSent = true
         if (room === roomList.at(-1)) {
           await douyu.donate(left, Number(room));
         } else {
           await douyu.donate(everyGive, Number(room));
         }
+      }
+      if (!isSent) {
+        logger.error("未赠送荧光棒，请确认")
       }
       logger.info("------荧光棒捐赠结束------");
       douyu.getNeedExp();
